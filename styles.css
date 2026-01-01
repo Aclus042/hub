@@ -1,0 +1,498 @@
+/*
+ * ============================================
+ * FAROL HUB - Estilos CSS
+ * ============================================
+ * 
+ * Tema: Farol à beira-mar
+ * Conceito: Orientação, guia, clareza
+ * Modo: Escuro como padrão
+ * 
+ * Estrutura do arquivo:
+ * 1. Variáveis CSS (cores, tipografia, espaçamentos)
+ * 2. Reset e estilos base
+ * 3. Background e efeitos atmosféricos
+ * 4. Layout principal
+ * 5. Componentes (header, cards, footer)
+ * 6. Animações
+ * 7. Responsividade
+ */
+
+/* ============================================
+   1. VARIÁVEIS CSS
+   ============================================ */
+:root {
+    /* Paleta de cores - Tema Farol */
+    --color-bg-deep: #0a1628;           /* Azul-mar profundo - fundo principal */
+    --color-bg-mid: #0f2744;            /* Azul médio - camadas */
+    --color-bg-surface: #1a3a5c;        /* Superfície elevada */
+    --color-gray-blue: #4a6a8a;         /* Cinza azulado - textos secundários */
+    --color-light: #e8f0f8;             /* Branco suave - textos principais */
+    --color-light-dim: #a8c0d8;         /* Branco diminuído */
+    --color-accent: #ffd54f;            /* Amarelo âmbar - luz do farol */
+    --color-accent-glow: #ffecb3;       /* Brilho suave da luz */
+    --color-accent-intense: #ffca28;    /* Luz intensa */
+    
+    /* Tipografia */
+    --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-size-base: 16px;
+    --font-size-sm: 0.875rem;
+    --font-size-lg: 1.125rem;
+    --font-size-xl: 1.5rem;
+    --font-size-2xl: 2rem;
+    --font-weight-normal: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+    
+    /* Espaçamentos */
+    --spacing-xs: 0.5rem;
+    --spacing-sm: 1rem;
+    --spacing-md: 1.5rem;
+    --spacing-lg: 2rem;
+    --spacing-xl: 3rem;
+    --spacing-2xl: 4rem;
+    
+    /* Bordas e sombras */
+    --border-radius-sm: 8px;
+    --border-radius-md: 12px;
+    --border-radius-lg: 16px;
+    --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.3);
+    --shadow-glow: 0 0 30px rgba(255, 213, 79, 0.3);
+    
+    /* Transições */
+    --transition-fast: 0.15s ease;
+    --transition-normal: 0.3s ease;
+    --transition-slow: 0.5s ease;
+}
+
+/* ============================================
+   2. RESET E ESTILOS BASE
+   ============================================ */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: var(--font-size-base);
+    scroll-behavior: smooth;
+    /* Previne scroll horizontal */
+    overflow-x: hidden;
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--color-bg-deep);
+    color: var(--color-light);
+    line-height: 1.6;
+    min-height: 100vh;
+    /* Previne overflow do beam de luz */
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* Remove estilos padrão de links */
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* ============================================
+   3. BACKGROUND E EFEITOS ATMOSFÉRICOS
+   ============================================ */
+
+/* Camada de gradiente simulando céu noturno e mar */
+.background-layer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+    /* Gradiente: céu escuro no topo → horizonte → mar profundo */
+    background: linear-gradient(
+        180deg,
+        #050d1a 0%,           /* Céu noturno */
+        #0a1628 30%,          /* Transição */
+        #0f2744 50%,          /* Horizonte */
+        #0a1e38 70%,          /* Mar superior */
+        #061420 100%          /* Mar profundo */
+    );
+}
+
+/* Efeito do feixe de luz do farol */
+.lighthouse-beam {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    width: 200vw;
+    height: 200vh;
+    z-index: -1;
+    pointer-events: none;
+    /* Gradiente cônico criando o feixe de luz */
+    background: conic-gradient(
+        from 0deg at 50% 15%,
+        transparent 0deg,
+        transparent 170deg,
+        rgba(255, 213, 79, 0.03) 175deg,
+        rgba(255, 236, 179, 0.08) 180deg,
+        rgba(255, 213, 79, 0.03) 185deg,
+        transparent 190deg,
+        transparent 360deg
+    );
+    transform: translateX(-50%);
+    /* Animação de rotação do feixe */
+    animation: beamRotate 12s linear infinite;
+    opacity: 0.7;
+}
+
+@keyframes beamRotate {
+    from {
+        transform: translateX(-50%) rotate(0deg);
+    }
+    to {
+        transform: translateX(-50%) rotate(360deg);
+    }
+}
+
+/* ============================================
+   4. LAYOUT PRINCIPAL
+   ============================================ */
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: var(--spacing-lg) var(--spacing-md);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+}
+
+/* ============================================
+   5. COMPONENTES
+   ============================================ */
+
+/* ----- HEADER ----- */
+.header {
+    text-align: center;
+    margin-bottom: var(--spacing-xl);
+    padding-top: var(--spacing-lg);
+}
+
+/* Ícone do farol */
+.lighthouse-icon {
+    width: 80px;
+    height: 100px;
+    margin: 0 auto var(--spacing-md);
+}
+
+.lighthouse-svg {
+    width: 100%;
+    height: 100%;
+    color: var(--color-light-dim);
+}
+
+/* Luz do farol pulsante */
+.lighthouse-light {
+    fill: var(--color-accent);
+    filter: drop-shadow(0 0 8px var(--color-accent)) 
+            drop-shadow(0 0 16px var(--color-accent-glow));
+    animation: lightPulse 2s ease-in-out infinite;
+}
+
+@keyframes lightPulse {
+    0%, 100% {
+        opacity: 0.8;
+        filter: drop-shadow(0 0 8px var(--color-accent)) 
+                drop-shadow(0 0 16px var(--color-accent-glow));
+    }
+    50% {
+        opacity: 1;
+        filter: drop-shadow(0 0 12px var(--color-accent)) 
+                drop-shadow(0 0 24px var(--color-accent-glow))
+                drop-shadow(0 0 32px var(--color-accent));
+    }
+}
+
+/* Título */
+.title {
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-light);
+    letter-spacing: -0.02em;
+    margin-bottom: var(--spacing-xs);
+}
+
+/* Subtítulo */
+.subtitle {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-normal);
+    color: var(--color-gray-blue);
+    letter-spacing: 0.02em;
+}
+
+/* ----- GRID DE LINKS ----- */
+.links-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--spacing-md);
+    width: 100%;
+    flex: 1;
+}
+
+/* ----- CARD DE LINK ----- */
+.link-card {
+    position: relative;
+    display: block;
+    background: linear-gradient(
+        135deg,
+        rgba(26, 58, 92, 0.6) 0%,
+        rgba(15, 39, 68, 0.8) 100%
+    );
+    border: 1px solid rgba(168, 192, 216, 0.1);
+    border-radius: var(--border-radius-md);
+    padding: var(--spacing-md) var(--spacing-lg);
+    transition: 
+        transform var(--transition-normal),
+        border-color var(--transition-normal),
+        box-shadow var(--transition-normal);
+    overflow: hidden;
+    /* Backdrop blur para efeito de vidro */
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+/* Efeito de brilho no hover - simula feixe de luz */
+.card-glow {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(
+        circle at center,
+        rgba(255, 213, 79, 0.15) 0%,
+        transparent 50%
+    );
+    opacity: 0;
+    transition: opacity var(--transition-normal);
+    pointer-events: none;
+}
+
+/* Conteúdo do card */
+.card-content {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    position: relative;
+    z-index: 1;
+}
+
+/* Ícone do card */
+.card-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    background: rgba(255, 213, 79, 0.1);
+    border-radius: var(--border-radius-sm);
+    color: var(--color-accent);
+    transition: 
+        background var(--transition-normal),
+        transform var(--transition-normal);
+}
+
+.card-icon svg {
+    width: 24px;
+    height: 24px;
+}
+
+/* Texto do card */
+.card-text {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-light);
+    transition: color var(--transition-normal);
+}
+
+/* Estados do card */
+.link-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(255, 213, 79, 0.3);
+    box-shadow: var(--shadow-glow);
+}
+
+.link-card:hover .card-glow {
+    opacity: 1;
+}
+
+.link-card:hover .card-icon {
+    background: rgba(255, 213, 79, 0.2);
+    transform: scale(1.05);
+}
+
+.link-card:hover .card-text {
+    color: var(--color-accent-glow);
+}
+
+/* Estado de foco para acessibilidade */
+.link-card:focus {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+}
+
+.link-card:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+}
+
+/* Estado ativo (clique) */
+.link-card:active {
+    transform: translateY(-2px);
+}
+
+/* ----- FOOTER ----- */
+.footer {
+    margin-top: auto;
+    padding-top: var(--spacing-xl);
+    padding-bottom: var(--spacing-md);
+    text-align: center;
+}
+
+.footer p {
+    font-size: var(--font-size-sm);
+    color: var(--color-gray-blue);
+    opacity: 0.7;
+}
+
+/* ============================================
+   6. ANIMAÇÕES ADICIONAIS
+   ============================================ */
+
+/* Animação de entrada dos cards */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.link-card {
+    animation: fadeInUp 0.5s ease forwards;
+}
+
+/* Delay escalonado para cada card */
+.link-card:nth-child(1) { animation-delay: 0.1s; }
+.link-card:nth-child(2) { animation-delay: 0.15s; }
+.link-card:nth-child(3) { animation-delay: 0.2s; }
+.link-card:nth-child(4) { animation-delay: 0.25s; }
+.link-card:nth-child(5) { animation-delay: 0.3s; }
+.link-card:nth-child(6) { animation-delay: 0.35s; }
+.link-card:nth-child(7) { animation-delay: 0.4s; }
+.link-card:nth-child(8) { animation-delay: 0.45s; }
+
+/* ============================================
+   7. RESPONSIVIDADE
+   ============================================ */
+
+/* Tablets */
+@media (max-width: 768px) {
+    :root {
+        --font-size-2xl: 1.75rem;
+        --font-size-xl: 1.25rem;
+    }
+    
+    .container {
+        padding: var(--spacing-md) var(--spacing-sm);
+    }
+    
+    .lighthouse-icon {
+        width: 70px;
+        height: 88px;
+    }
+    
+    .links-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-sm);
+    }
+    
+    .link-card {
+        padding: var(--spacing-md);
+    }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+    :root {
+        --font-size-base: 15px;
+        --font-size-2xl: 1.5rem;
+        --font-size-lg: 1rem;
+    }
+    
+    .container {
+        padding: var(--spacing-sm);
+    }
+    
+    .header {
+        margin-bottom: var(--spacing-lg);
+        padding-top: var(--spacing-md);
+    }
+    
+    .lighthouse-icon {
+        width: 60px;
+        height: 75px;
+    }
+    
+    .card-icon {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .card-icon svg {
+        width: 20px;
+        height: 20px;
+    }
+    
+    /* Desativa animação do beam em mobile para performance */
+    .lighthouse-beam {
+        animation: none;
+        opacity: 0.3;
+    }
+}
+
+/* Preferência por movimento reduzido */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    
+    .lighthouse-beam {
+        animation: none;
+    }
+}
+
+/* Modo de alto contraste */
+@media (prefers-contrast: high) {
+    .link-card {
+        border-width: 2px;
+        border-color: var(--color-light);
+    }
+    
+    .card-text {
+        font-weight: var(--font-weight-semibold);
+    }
+}
