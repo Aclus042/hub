@@ -63,6 +63,13 @@
     --transition-fast: 0.15s ease;
     --transition-normal: 0.3s ease;
     --transition-slow: 0.5s ease;
+    --transition-bounce: 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    --transition-smooth: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    
+    /* Animações */
+    --animation-duration-fast: 0.3s;
+    --animation-duration-normal: 0.6s;
+    --animation-duration-slow: 1s;
 }
 
 /* ============================================
@@ -94,6 +101,30 @@ body {
     position: relative;
 }
 
+/* Loading state */
+body.loading {
+    overflow: hidden;
+}
+
+body.loading::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--color-bg-deep);
+    z-index: 9999;
+    animation: fadeOut 0.5s ease 0.3s forwards;
+}
+
+@keyframes fadeOut {
+    to {
+        opacity: 0;
+        pointer-events: none;
+    }
+}
+
 /* Remove estilos padrão de links */
 a {
     text-decoration: none;
@@ -121,6 +152,25 @@ a {
         #0a1e38 70%,          /* Mar superior */
         #061420 100%          /* Mar profundo */
     );
+}
+
+/* Efeito de ondas no fundo */
+.background-layer::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 40%;
+    background: 
+        radial-gradient(ellipse at 20% 50%, rgba(26, 58, 92, 0.3) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 70%, rgba(15, 39, 68, 0.4) 0%, transparent 50%);
+    animation: waveMove 20s ease-in-out infinite;
+}
+
+@keyframes waveMove {
+    0%, 100% { transform: translateY(0) scale(1); opacity: 0.3; }
+    50% { transform: translateY(-20px) scale(1.1); opacity: 0.5; }
 }
 
 /* Efeito do feixe de luz do farol */
@@ -158,6 +208,70 @@ a {
     }
 }
 
+/* Estrelas animadas */
+.stars {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 60%;
+    z-index: -1;
+    pointer-events: none;
+}
+
+.stars::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(2px 2px at 20% 30%, rgba(255, 255, 255, 0.8), transparent),
+        radial-gradient(2px 2px at 60% 70%, rgba(255, 255, 255, 0.6), transparent),
+        radial-gradient(1px 1px at 50% 50%, rgba(255, 255, 255, 0.9), transparent),
+        radial-gradient(1px 1px at 80% 10%, rgba(255, 213, 79, 0.8), transparent),
+        radial-gradient(2px 2px at 90% 60%, rgba(255, 255, 255, 0.7), transparent),
+        radial-gradient(1px 1px at 33% 80%, rgba(255, 255, 255, 0.5), transparent);
+    background-size: 200% 200%;
+    animation: twinkle 5s ease-in-out infinite;
+}
+
+.stars-2 {
+    animation-delay: 1s;
+    opacity: 0.5;
+}
+
+.stars-2::before {
+    background-image: 
+        radial-gradient(1px 1px at 40% 20%, rgba(255, 255, 255, 0.7), transparent),
+        radial-gradient(2px 2px at 70% 80%, rgba(255, 255, 255, 0.5), transparent),
+        radial-gradient(1px 1px at 15% 60%, rgba(255, 213, 79, 0.6), transparent);
+}
+
+.stars-3 {
+    animation-delay: 2s;
+    opacity: 0.3;
+}
+
+.stars-3::before {
+    background-image: 
+        radial-gradient(1px 1px at 25% 45%, rgba(255, 255, 255, 0.6), transparent),
+        radial-gradient(1px 1px at 85% 25%, rgba(255, 255, 255, 0.4), transparent),
+        radial-gradient(2px 2px at 55% 90%, rgba(255, 255, 255, 0.5), transparent);
+}
+
+@keyframes twinkle {
+    0%, 100% { 
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% { 
+        opacity: 0.3;
+        transform: scale(1.2);
+    }
+}
+
 /* ============================================
    4. LAYOUT PRINCIPAL
    ============================================ */
@@ -182,6 +296,18 @@ a {
     text-align: center;
     margin-bottom: var(--spacing-xl);
     padding-top: var(--spacing-lg);
+    animation: headerFadeIn 0.8s ease forwards;
+}
+
+@keyframes headerFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* Ícone do farol */
@@ -189,6 +315,16 @@ a {
     width: 80px;
     height: 100px;
     margin: 0 auto var(--spacing-md);
+    transition: transform var(--transition-smooth);
+    cursor: pointer;
+}
+
+.lighthouse-icon:hover {
+    transform: scale(1.1) rotate(2deg);
+}
+
+.lighthouse-icon:hover .lighthouse-light {
+    animation: lightPulse 0.5s ease-in-out infinite;
 }
 
 .lighthouse-svg {
@@ -240,9 +376,38 @@ a {
 .links-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: var(--spacing-md);
+    gap: var(--spacing-lg);
     width: 100%;
     flex: 1;
+    padding: var(--spacing-md) 0;
+    justify-content: center;
+}
+
+/* Duas colunas em telas médias */
+@media (min-width: 768px) and (max-width: 1024px) {
+    .links-grid {
+        grid-template-columns: repeat(2, 1fr);
+        max-width: 700px;
+        margin: 0 auto;
+    }
+}
+
+/* Layout otimizado para 7 cards em telas grandes */
+@media (min-width: 1025px) {
+    .links-grid {
+        grid-template-columns: repeat(3, 1fr);
+        max-width: 1100px;
+        margin: 0 auto;
+    }
+    
+    .container {
+        max-width: 1400px;
+    }
+    
+    /* Centraliza o último card quando sobrar 1 na linha */
+    .link-card:nth-child(7) {
+        grid-column: 2;
+    }
 }
 
 /* ----- CARD DE LINK ----- */
@@ -258,13 +423,46 @@ a {
     border-radius: var(--border-radius-md);
     padding: var(--spacing-md) var(--spacing-lg);
     transition: 
-        transform var(--transition-normal),
+        transform var(--transition-smooth),
         border-color var(--transition-normal),
         box-shadow var(--transition-normal);
     overflow: hidden;
     /* Backdrop blur para efeito de vidro */
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
+    /* Efeito 3D */
+    transform-style: preserve-3d;
+    perspective: 1000px;
+}
+
+/* Borda animada no hover */
+.link-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: var(--border-radius-md);
+    padding: 2px;
+    background: linear-gradient(
+        45deg,
+        transparent,
+        var(--color-accent),
+        transparent
+    );
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity var(--transition-normal);
+}
+
+.link-card:hover::before {
+    opacity: 0.5;
+    animation: borderRotate 3s linear infinite;
+}
+
+@keyframes borderRotate {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 200% 50%; }
 }
 
 /* Efeito de brilho no hover - simula feixe de luz */
@@ -318,14 +516,20 @@ a {
     font-size: var(--font-size-lg);
     font-weight: var(--font-weight-medium);
     color: var(--color-light);
-    transition: color var(--transition-normal);
+    transition: 
+        color var(--transition-normal),
+        transform var(--transition-smooth),
+        text-shadow var(--transition-normal);
 }
 
 /* Estados do card */
 .link-card:hover {
-    transform: translateY(-4px);
-    border-color: rgba(255, 213, 79, 0.3);
-    box-shadow: var(--shadow-glow);
+    transform: translateY(-8px) scale(1.02);
+    border-color: rgba(255, 213, 79, 0.4);
+    box-shadow: 
+        0 8px 32px rgba(255, 213, 79, 0.2),
+        0 16px 48px rgba(0, 0, 0, 0.4),
+        inset 0 0 0 1px rgba(255, 213, 79, 0.1);
 }
 
 .link-card:hover .card-glow {
@@ -333,12 +537,19 @@ a {
 }
 
 .link-card:hover .card-icon {
-    background: rgba(255, 213, 79, 0.2);
-    transform: scale(1.05);
+    background: rgba(255, 213, 79, 0.25);
+    transform: scale(1.1) rotate(5deg);
+    box-shadow: 0 4px 16px rgba(255, 213, 79, 0.3);
+}
+
+.link-card:hover .card-icon svg {
+    filter: drop-shadow(0 2px 8px rgba(255, 213, 79, 0.5));
 }
 
 .link-card:hover .card-text {
     color: var(--color-accent-glow);
+    transform: translateX(4px);
+    text-shadow: 0 0 20px rgba(255, 213, 79, 0.3);
 }
 
 /* Estado de foco para acessibilidade */
@@ -355,6 +566,23 @@ a {
 /* Estado ativo (clique) */
 .link-card:active {
     transform: translateY(-2px);
+}
+
+/* Efeito ripple para mobile */
+.ripple {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 213, 79, 0.4);
+    transform: scale(0);
+    animation: rippleEffect 0.6s ease-out;
+    pointer-events: none;
+}
+
+@keyframes rippleEffect {
+    to {
+        transform: scale(4);
+        opacity: 0;
+    }
 }
 
 /* ----- FOOTER ----- */
@@ -379,16 +607,28 @@ a {
 @keyframes fadeInUp {
     from {
         opacity: 0;
-        transform: translateY(20px);
+        transform: translateY(40px) scale(0.9);
     }
     to {
         opacity: 1;
-        transform: translateY(0);
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.8) rotate(-5deg);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) rotate(0deg);
     }
 }
 
 .link-card {
-    animation: fadeInUp 0.5s ease forwards;
+    opacity: 0;
+    animation: fadeInScale 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
 /* Delay escalonado para cada card */
@@ -401,6 +641,11 @@ a {
 .link-card:nth-child(7) { animation-delay: 0.4s; }
 .link-card:nth-child(8) { animation-delay: 0.45s; }
 
+/* Animação alternada para variedade */
+.link-card:nth-child(even) {
+    animation-name: fadeInUp;
+}
+
 /* ============================================
    7. RESPONSIVIDADE
    ============================================ */
@@ -410,10 +655,11 @@ a {
     :root {
         --font-size-2xl: 1.75rem;
         --font-size-xl: 1.25rem;
+        --spacing-lg: 1.5rem;
     }
     
     .container {
-        padding: var(--spacing-md) var(--spacing-sm);
+        padding: var(--spacing-md) var(--spacing-md);
     }
     
     .lighthouse-icon {
@@ -423,11 +669,17 @@ a {
     
     .links-grid {
         grid-template-columns: 1fr;
-        gap: var(--spacing-sm);
+        gap: var(--spacing-md);
     }
     
     .link-card {
-        padding: var(--spacing-md);
+        padding: var(--spacing-md) var(--spacing-lg);
+    }
+    
+    /* Otimiza hover para touch */
+    .link-card:active {
+        transform: scale(0.98);
+        transition: transform 0.1s ease;
     }
 }
 
@@ -437,10 +689,11 @@ a {
         --font-size-base: 15px;
         --font-size-2xl: 1.5rem;
         --font-size-lg: 1rem;
+        --spacing-md: 1rem;
     }
     
     .container {
-        padding: var(--spacing-sm);
+        padding: var(--spacing-md) var(--spacing-sm);
     }
     
     .header {
@@ -449,24 +702,82 @@ a {
     }
     
     .lighthouse-icon {
-        width: 60px;
-        height: 75px;
+        width: 64px;
+        height: 80px;
+    }
+    
+    .title {
+        font-size: 1.75rem;
+    }
+    
+    .subtitle {
+        font-size: 0.95rem;
+    }
+    
+    .links-grid {
+        gap: var(--spacing-md);
+        padding: var(--spacing-sm) 0;
+    }
+    
+    .link-card {
+        padding: var(--spacing-md);
+        /* Melhora toque em mobile */
+        -webkit-tap-highlight-color: rgba(255, 213, 79, 0.1);
+    }
+    
+    .card-content {
+        gap: var(--spacing-sm);
     }
     
     .card-icon {
-        width: 40px;
-        height: 40px;
+        width: 44px;
+        height: 44px;
+        flex-shrink: 0;
     }
     
     .card-icon svg {
-        width: 20px;
-        height: 20px;
+        width: 22px;
+        height: 22px;
+    }
+    
+    .card-text {
+        font-size: 1.05rem;
+    }
+    
+    /* Otimiza interações touch */
+    .link-card:active {
+        transform: scale(0.97);
+        box-shadow: 0 2px 8px rgba(255, 213, 79, 0.2);
     }
     
     /* Desativa animação do beam em mobile para performance */
     .lighthouse-beam {
         animation: none;
-        opacity: 0.3;
+        opacity: 0.2;
+    }
+    
+    /* Reduz ondas de fundo em mobile */
+    .background-layer::before {
+        animation: none;
+        opacity: 0.2;
+    }
+    
+    /* Simplifica efeitos em mobile */
+    .link-card::before {
+        display: none;
+    }
+    
+    .link-card:hover {
+        transform: none;
+    }
+    
+    .link-card:active .card-icon {
+        transform: scale(0.95);
+    }
+    
+    .footer {
+        padding-top: var(--spacing-lg);
+        font-size: 0.85rem;
     }
 }
 
@@ -483,6 +794,16 @@ a {
     .lighthouse-beam {
         animation: none;
     }
+    
+    .stars,
+    .stars-2,
+    .stars-3 {
+        animation: none;
+    }
+    
+    .background-layer::before {
+        animation: none;
+    }
 }
 
 /* Modo de alto contraste */
@@ -495,4 +816,58 @@ a {
     .card-text {
         font-weight: var(--font-weight-semibold);
     }
+}
+
+/* Scroll suave personalizado */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--color-bg-deep);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--color-bg-surface);
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--color-gray-blue);
+}
+
+/* Seleção de texto customizada */
+::selection {
+    background: rgba(255, 213, 79, 0.3);
+    color: var(--color-light);
+}
+
+::-moz-selection {
+    background: rgba(255, 213, 79, 0.3);
+    color: var(--color-light);
+}
+
+/* Performance: will-change para elementos animados */
+.link-card,
+.lighthouse-beam,
+.card-glow,
+.lighthouse-light {
+    will-change: transform;
+}
+
+/* Hardware acceleration */
+.link-card,
+.lighthouse-icon {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+}
+
+/* Adiciona brilho sutil no footer */
+.footer {
+    animation: footerGlow 3s ease-in-out infinite;
+}
+
+@keyframes footerGlow {
+    0%, 100% { opacity: 0.7; }
+    50% { opacity: 0.9; }
 }
